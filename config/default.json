@@ -1,0 +1,4 @@
+{
+  "mongoURI": "<Your Mongo URI>",
+  "jwtSecret": "ras_jwtsecret"
+}
