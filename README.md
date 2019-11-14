@@ -25,6 +25,10 @@ npm run client
 # Server runs on http://localhost:5000 and client on http://localhost:3000
 ```
 
+## Check live demo on Heroku
+
+[Live Demo](https://react-auth-starter.herokuapp.com/)
+
 ## Deployment
 
 Simply push to Heroku and it will build and load the client index.html page
