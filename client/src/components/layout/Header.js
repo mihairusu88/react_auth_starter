@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link as RouterLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { logout } from '../../actions/authActions';
+import { logout } from '../../actions/userActions';
 import PropTypes from 'prop-types';
 import ProtectedContent from '../utils/ProtectedContent';
 import PublicContent from '../utils/PublicContent';
@@ -30,11 +30,11 @@ class Header extends Component {
     logout: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
     isLoading: PropTypes.bool,
-    error: PropTypes.object.isRequired,
+    message: PropTypes.object.isRequired,
   };
 
   render() {
-    const { classes, isAuthenticated, isLoading } = this.props;
+    const { classes } = this.props;
     const LinkLogin = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
     const LinkRegister = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
     const LinkLogout = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
@@ -46,7 +46,7 @@ class Header extends Component {
           <Typography className={classes.toolbarTitle} variant="h6" color="inherit" noWrap>
             Album layout
           </Typography>
-          <PublicContent isAuth={isAuthenticated} isLoading={isLoading}>
+          <PublicContent>
             <Button className={classes.toolbarButton} variant="contained" color="secondary" component={LinkLogin} to="/login">
               Login
             </Button>
@@ -54,7 +54,7 @@ class Header extends Component {
               Register
             </Button>
           </PublicContent>
-          <ProtectedContent isAuth={isAuthenticated} isLoading={isLoading}>
+          <ProtectedContent>
             <Button className={classes.toolbarButton} variant="contained" color="secondary" component={LinkLogout} to="#" onClick={this.props.logout}>
               Logout
             </Button>
@@ -66,9 +66,9 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  isLoading: state.auth.isLoading,
-  error: state.error
+  isAuthenticated: state.user.isAuthenticated,
+  isLoading: state.user.isLoading,
+  message: state.message
 });
 
 export default compose(

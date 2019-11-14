@@ -1,4 +1,4 @@
 {
-  "mongoURI": "<Your Mongo URI>",
+  "mongoURI": "mongodb+srv://admin:admin12345@cluster0-ups4l.mongodb.net/auth_example?retryWrites=true&w=majority",
   "jwtSecret": "ras_jwtsecret"
 }

@@ -1,10 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
 const styles = theme => ({
   footer: {
+    width: '100%',
+    margin: 'auto 0 0 0',
+    alignSelf: 'flex-end',
     backgroundColor: '#333333',
     padding: theme.spacing(4),
   },
@@ -14,10 +17,10 @@ const styles = theme => ({
 });
 
 class Footer extends Component {
-  render(){
+  render() {
     const { classes } = this.props;
 
-    return(
+    return (
       <footer className={classes.footer}>
         <Typography className={classes.copyright} variant="body2" color="textSecondary" align="center">
           {'Copyright © '}

@@ -1,17 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const PublicContent = ({ component: Component, isAuth, isLoading, children, ...rest }) => {
+const PublicContent = ({ component: Component, user: { isAuthenticated, isLoading }, children, ...rest }) => {
     if (isLoading) {
         return null;
     } else {
         if (Component !== undefined) {
-            if (isAuth === false || isAuth === null) {
+            if (isAuthenticated === false || isAuthenticated === null) {
                 return <Component {...rest} />
             } else {
                 return null;
             }
         } else {
-            if (isAuth === false || isAuth === null) {
+            if (isAuthenticated === false || isAuthenticated === null) {
                 return (
                     <React.Fragment>
                         {children}
@@ -24,4 +26,12 @@ const PublicContent = ({ component: Component, isAuth, isLoading, children, ...r
     }
 }
 
-export default PublicContent;
+PublicContent.propTypes = {
+    user: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    user: state.user
+});
+
+export default connect(mapStateToProps)(PublicContent);

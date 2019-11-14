@@ -5,22 +5,22 @@ import CardsComponent from '../Cards';
 import ProtectedContent from '../utils/ProtectedContent';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../../actions/authActions';
-import { clearErrors } from '../../actions/errorActions';
+import { login } from '../../actions/userActions';
+import { clearMessages } from '../../actions/messageActions';
 
 class Main extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
+    message: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
+    clearMessages: PropTypes.func.isRequired
   };
 
   render() {
     return (
       <Container maxWidth="xl">
         <HomeComponent>
-          <ProtectedContent isAuth={this.props.isAuthenticated} isLoading={this.props.isLoading}>
+          <ProtectedContent>
             <CardsComponent></CardsComponent>
           </ProtectedContent>
         </HomeComponent>
@@ -30,12 +30,12 @@ class Main extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error
+  isAuthenticated: state.user.isAuthenticated,
+  message: state.message
 });
 
 export default
   connect(
     mapStateToProps,
-    { login, clearErrors }
+    { login, clearMessages }
   )(Main);

@@ -5,14 +5,14 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { register } from '../actions/userActions';
+import { resetpassword } from '../actions/userActions';
 import { clearMessages } from '../actions/messageActions';
 import { compose } from 'recompose';
 
@@ -34,27 +34,23 @@ const styles = theme => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
 });
 
-class Register extends Component {
+class ForgotPassword extends Component {
   state = {
-    firstName: '',
-    lastName: '',
     email: '',
-    password: '',
     msg: null,
-  };
+  }
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
     isLoading: PropTypes.bool,
     message: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired,
     clearMessages: PropTypes.func.isRequired
   };
 
@@ -62,8 +58,8 @@ class Register extends Component {
     const { message } = this.props;
 
     if (message !== prevProps.message) {
-      // Check for register error
-      if (message.id === 'REGISTER_FAIL') {
+      // Check for login error
+      if (message.id === 'LOGIN_FAIL') {
         this.setState({ msg: message.msg.msg });
       } else {
         this.setState({ msg: null });
@@ -83,18 +79,14 @@ class Register extends Component {
   submitForm = (e) => {
     e.preventDefault();
 
-    const { firstName, lastName, email, password } = this.state;
+    const { email } = this.state;
 
-    // Create user object
-    const newUser = {
-      firstName,
-      lastName,
+    const user = {
       email,
-      password
     };
 
-    // Attempt to register
-    this.props.register(newUser);
+    // Attempt to reset password
+    this.props.resetpassword(user);
   }
 
   render() {
@@ -112,67 +104,24 @@ class Register extends Component {
             <CssBaseline />
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
-                <PersonAddIcon />
+                <VpnKeyIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Sign up
+                Forgot Password
               </Typography>
               <form className={classes.form} noValidate onSubmit={this.submitForm}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      autoComplete="fname"
-                      name="firstName"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      value={this.state.firstName}
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      name="lastName"
-                      autoComplete="lname"
-                      value={this.state.lastName}
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      value={this.state.email}
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      variant="outlined"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="current-password"
-                      value={this.state.password}
-                      onChange={this.handleInputChange}
-                    />
-                  </Grid>
-                </Grid>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={this.state.email}
+                  onChange={this.handleInputChange}
+                />
                 <Button
                   type="submit"
                   fullWidth
@@ -180,12 +129,12 @@ class Register extends Component {
                   color="primary"
                   className={classes.submit}
                 >
-                  Sign Up
+                  Reset Password
                 </Button>
                 <Grid container justify="center">
                   <Grid item>
                     <Link variant="body2" component={LinkLogin} to="/login">
-                      Already have an account? Sign in
+                      Back to login.
                     </Link>
                   </Grid>
                 </Grid>
@@ -208,6 +157,6 @@ export default compose(
   withStyles(styles),
   connect(
     mapStateToProps,
-    { register, clearMessages }
+    { resetpassword, clearMessages }
   )
-)(Register);
+)(ForgotPassword);

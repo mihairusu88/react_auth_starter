@@ -44,7 +44,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.user.isAuthenticated
 });
 
 export default compose(

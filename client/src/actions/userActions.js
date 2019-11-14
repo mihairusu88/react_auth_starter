@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { returnErrors } from './errorActions';
+import { returnMessages } from './messageActions';
 
 import {
   USER_LOADED,
@@ -9,7 +9,9 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAIL,
 } from './types';
 
 // Check token & load user
@@ -18,7 +20,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
   axios
-    .get('/api/auth/user', tokenConfig(getState))
+    .get('/api/users/loaduser', tokenConfig(getState))
     .then(res =>
       dispatch({
         type: USER_LOADED,
@@ -26,7 +28,7 @@ export const loadUser = () => (dispatch, getState) => {
       })
     )
     .catch(err => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch(returnMessages(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR
       });
@@ -46,16 +48,19 @@ export const register = ({ firstName, lastName, email, password }) => dispatch =
   const body = JSON.stringify({ firstName, lastName, email, password });
 
   axios
-    .post('/api/users', body, config)
-    .then(res =>
-      dispatch({
-        type: REGISTER_SUCCESS,
-        payload: res.data
-      })
-    )
+    .post('/api/users/register', body, config)
+    .then(res => {
+        dispatch(
+          returnMessages(res.data, res.status, 'REGISTER_SUCCESS')
+        );
+        dispatch({
+          type: REGISTER_SUCCESS,
+          payload: res.data
+        });
+    })
     .catch(err => {
       dispatch(
-        returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL')
+        returnMessages(err.response.data, err.response.status, 'REGISTER_FAIL')
       );
       dispatch({
         type: REGISTER_FAIL
@@ -76,7 +81,7 @@ export const login = ({ email, password }) => dispatch => {
   const body = JSON.stringify({ email, password });
 
   axios
-    .post('/api/auth', body, config)
+    .post('/api/users/auth', body, config)
     .then(res =>
       dispatch({
         type: LOGIN_SUCCESS,
@@ -85,7 +90,7 @@ export const login = ({ email, password }) => dispatch => {
     )
     .catch(err => {
       dispatch(
-        returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')
+        returnMessages(err.response.data, err.response.status, 'LOGIN_FAIL')
       );
       dispatch({
         type: LOGIN_FAIL
@@ -100,10 +105,44 @@ export const logout = () => {
   };
 };
 
+// Reset Password for User
+export const resetpassword = ({ email }) => dispatch => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  // Request body
+  const body = JSON.stringify({ email });
+
+  axios
+    .post('/api/users/resetpassword', body, config)
+    .then(res => {
+      dispatch(
+        returnMessages(res.data, res.status, 'RESET_PASSWORD_FAIL')
+      );
+      dispatch({
+        type: RESET_PASSWORD_SUCCESS,
+        payload: res.data
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch(
+        returnMessages(err.response.data, err.response.status, 'RESET_PASSWORD_FAIL')
+      );
+      dispatch({
+        type: RESET_PASSWORD_FAIL
+      });
+    });
+};
+
 // Setup config/headers and token
 export const tokenConfig = getState => {
   // Get token from localstorage
-  const token = getState().auth.token;
+  const token = getState().user.token;
 
   // Headers
   const config = {

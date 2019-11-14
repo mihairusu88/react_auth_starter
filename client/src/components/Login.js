@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -14,8 +12,8 @@ import Container from '@material-ui/core/Container';
 import { Link as RouterLink, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { login } from '../actions/authActions';
-import { clearErrors } from '../actions/errorActions';
+import { login } from '../actions/userActions';
+import { clearMessages } from '../actions/messageActions';
 import { compose } from 'recompose';
 
 const styles = theme => ({
@@ -53,26 +51,21 @@ class Login extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool,
     isLoading: PropTypes.bool,
-    error: PropTypes.object.isRequired,
+    message: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
+    clearMessages: PropTypes.func.isRequired
   };
 
   componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props;
+    const { message } = this.props;
 
-    if (error !== prevProps.error) {
-      // Check for register error
-      if (error.id === 'LOGIN_FAIL') {
-        this.setState({ msg: error.msg.msg });
+    if (message !== prevProps.message) {
+      // Check for login error
+      if (message.id === 'LOGIN_FAIL') {
+        this.setState({ msg: message.msg.msg });
       } else {
         this.setState({ msg: null });
       }
-    }
-
-    // If authenticated, set redirect to true
-    if (isAuthenticated) {
-      this.setState({ redirect: true });
     }
   }
 
@@ -101,6 +94,7 @@ class Login extends Component {
 
   render() {
     const { classes, isAuthenticated, isLoading } = this.props;
+    const LinkForgotPassword = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
     const LinkRegister = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
     if (isLoading) {
@@ -118,7 +112,7 @@ class Login extends Component {
               </Avatar>
               <Typography component="h1" variant="h5">
                 Sign in
-        </Typography>
+              </Typography>
               <form className={classes.form} noValidate onSubmit={this.submitForm}>
                 <TextField
                   variant="outlined"
@@ -145,10 +139,6 @@ class Login extends Component {
                   value={this.state.password}
                   onChange={this.handleInputChange}
                 />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                />
                 <Button
                   type="submit"
                   fullWidth
@@ -157,12 +147,12 @@ class Login extends Component {
                   className={classes.submit}
                 >
                   Sign In
-          </Button>
+                </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    <Link variant="body2" component={LinkForgotPassword} to="/forgot-password">
                       Forgot password?
-              </Link>
+                    </Link>
                   </Grid>
                   <Grid item>
                     <Link variant="body2" component={LinkRegister} to="/register">
@@ -180,15 +170,15 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  isLoading: state.auth.isLoading,
-  error: state.error
+  isAuthenticated: state.user.isAuthenticated,
+  isLoading: state.user.isLoading,
+  message: state.message
 });
 
 export default compose(
   withStyles(styles),
   connect(
     mapStateToProps,
-    { login, clearErrors }
+    { login, clearMessages }
   )
 )(Login);
