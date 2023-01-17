@@ -1,7 +1,7 @@
 {
-  "name": "react_auth_service",
+  "name": "react_auth_starter",
   "version": "1.0.0",
-  "description": "React Auth Service with MERN stack",
+  "description": "React Auth Starter with MERN stack",
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
@@ -9,7 +9,7 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "deploy": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Mihai Rusu",
   "license": "MIT",
