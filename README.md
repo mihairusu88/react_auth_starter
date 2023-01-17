@@ -25,13 +25,11 @@ npm run client
 # Server runs on http://localhost:5000 and client on http://localhost:3000
 ```
 
-## Check live demo on Heroku
+## Check live demo on netlify
 
-[Live Demo](https://react-auth-starter.herokuapp.com/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/4b34d9ff-3ea9-4afd-89e0-ae836ff1fc21/deploy-status?branch=master)](https://app.netlify.com/sites/react-auth-starter/deploys)
 
-## Deployment
-
-Simply push to Heroku and it will build and load the client index.html page
+[Live Demo](https://react-auth-starter.netlify.app/)
 
 ### Version
 
